@@ -71,7 +71,7 @@ def index(request):
         'current_order_products': current_order_products,
         'item_count': item_count,
         "user": request.user,
-        "menu_item": menu_items,
+        "menu_item": menu_items.order_by('-category')
     }
     return render(request, "orders/index.html", context)
 
