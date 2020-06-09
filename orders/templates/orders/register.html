@@ -1,0 +1,65 @@
+{% extends "orders/base.html" %}
+
+{% block title %}
+Register
+{% endblock %}
+{% block body %}
+
+
+<div class="container-login ">
+  <div class="row justify-content-center">
+        <div class="col-12 mt-3 p-3 " style="color:lightblue">
+          <div >
+
+    {% if message %}
+    <div class='text-center alert alert-info'>
+      <h3 style="color:red"> {{message}} </h3>
+    </div>
+    {% endif %}
+    </div>
+    <h1>Register for JO Pizza</h1>
+
+    <form  action="{% url 'orders:register' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control"
+            id="username" placeholder="Username" name="username">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email address:</label>
+            <input type="email" class="form-control"
+            id="email" placeholder="Email Address" name="email">
+        </div>
+
+        <div class="form-group">
+            <label for="first_name">First name:</label>
+            <input type="text" class="form-control"
+            id="first_name" placeholder="First Name" name="first_name">
+        </div>
+
+        <div class="form-group">
+            <label for="last_name">Last name:</label>
+            <input type="text" class="form-control"
+            id="last_name" placeholder="Last Name" name="last_name">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" autocomplete="false"
+            id="password" placeholder="Password" name="password">
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password">Retype Password:</label>
+            <input type="password" class="form-control"
+            id="confirm_password" placeholder="Password" name="confirm_password">
+        </div>
+        <input type="submit" class="btn btn-primary" value="Register">
+    </form>
+</div>
+</div>
+  </div>
+
+{% endblock %}

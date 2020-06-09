@@ -1,0 +1,162 @@
+{% extends "orders/base.html" %}
+
+{% block title %} Order Summary {% endblock %}
+{% block body %}
+{% load static %}
+
+
+
+<div class="my-menu-flex-container">
+  <!-- <h1 style="color:white">Cart</h1> -->
+  <table class=" table-dark table-sm table-responsive-sm text-center table-bordered table-hover" style="margin-top:5%; width:100%  ">
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert" style="margin-top: 3%">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+
+    <tr class="bg-primary">
+      <th colspan="4">
+        <h1>Cart</h1>
+      </th>
+    </tr>
+
+    <tr>
+      <th>No.</th>
+      <th>Item</th>
+      <th>Price</th>
+
+    </tr>
+    {% for item in order.get_cart_ordered_items %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+
+
+      <!-- pizza with toppings -->
+      {%if item.menu_item.category == "Pizza" and "Topping" in item.menu_item.name %}
+
+      {% if item.ptoppings != False %}
+      <td>
+        {{item.menu_item.sizes}}
+        {{ item.menu_item.name }}
+        Toppings: {{ item.ptoppings }}
+
+      </td>
+      {% endif %}
+
+      {% endif %}
+
+
+
+      <!-- regular pizza with no toppings -->
+      {%if item.menu_item.category == "Pizza" and "Topping" not in item.menu_item.name %}
+      <td>
+        {{item.menu_item.sizes}}
+        {{ item.menu_item.name }}
+
+      </td>
+      {% endif %}
+
+
+      <!-- subs with no extras -->
+
+      {% if item.menu_item.category == "Subs" and item.num_extras == 0 %}
+
+      <td>
+        {{item.menu_item.sizes}}
+
+        {{ item.menu_item.name }}
+
+      </td>
+
+      {% endif %}
+
+
+      <!-- subs with extras -->
+
+      {% if item.num_extras > 0 %}
+      <td>
+        {{item.menu_item.sizes}}
+
+        {{ item.menu_item.name }}
+        Extras: {{ item.extras }}
+
+
+      </td>
+
+      {% endif %}
+
+      <!--any menu item not a pizza or sub -->
+
+      {% if item.menu_item.category != "Pizza" and item.menu_item.category != "Subs" %}
+
+      <td>
+        {% if item.menu_item.sizes%}
+        {{item.menu_item.sizes}}
+        {% endif %}
+        {{ item.menu_item.name }}
+
+      </td>
+
+      {% endif %}
+
+      <!-- subs with extras and price for extras -->
+
+      {% if item.num_extras > 0 %}
+      <td>
+        {{ item.menu_item.price }} + {{item.extras_cost}} </td>
+
+      {% else %}
+
+      <!-- price for everything not a sub -->
+
+      <td> {{item.menu_item.price}} </td>
+      {% endif %}
+
+
+      <td>
+
+        <a href="{% url 'orders:delete_item' item.id %}" class="btn btn-sm btn-warning">Remove</a>
+
+
+      </td>
+
+
+      {% empty %}
+    <tr>
+      <td colspan=3> You have not added any items yet.</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      {% if order.get_cart_total != None %}
+      <td colspan=2>
+        <strong class="pull-right">Order Total:</strong>
+      </td>
+
+      <td colspan=1>
+        $<strong>{{ order.get_cart_total}}</strong>
+      </td>
+      {% endif %}
+    </tr>
+    <tr>
+
+      <td colspan=3>
+        <a href="{% url 'orders:index' %}" class="btn btn-warning ">
+          {% if order %}Return to Menu{% else %}Add Items to Cart {% endif %}
+        </a>
+      </td>
+      <td colspan=5>
+        {% if order.get_cart_ordered_items %}
+        <a href="{% url 'orders:checkout' %}" class=" btn btn-sm btn-primary">Checkout</a>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+{% endblock %}

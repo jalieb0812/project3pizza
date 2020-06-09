@@ -1,0 +1,194 @@
+{% extends "orders/base.html" %}
+
+
+
+{% block title %} Menu{% endblock %}
+
+
+{% load static %}
+
+
+
+
+{% block body %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'orders/index.css' %}">
+
+   <nav class="navbar navbar-expand-lg bg-dark navbar-dark justify-content-center fixed-top">
+     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-nav"
+     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbar-nav">
+
+     <ul class="navbar-nav mr-auto">
+
+         <li class="nav-item">
+
+           <a class="nav-link active" href="#Pizza">Pizza</a>
+
+         </li>
+
+        <li class="nav-item">
+
+          <a class="nav-link" href="#Pasta">Pasta</a>
+
+        </li>
+
+        <li class="nav-item">
+
+          <a class="nav-link" href="#Salad">Salad</a>
+
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="#Subs">Subs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#Dinner_Platter">Dinner Platters</a>
+        </li>
+
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Menu</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href= "login">login</a>
+            <a class="dropdown-item" href="logout">logout</a>
+            <a class="dropdown-item" href="register">register</a>
+            <a class="dropdown-item" href="profile">Profile</a>
+            {% if request.user.is_superuser %}
+             <a class="dropdown-item" href="/admin">Admin</a>
+            <a class="dropdown-item" href="/allorders">All Orders</a>
+
+             {% endif %}
+          </div>
+        </li>
+
+      </ul>
+      <span class="nav-item">
+        <div class="" style="color: white">
+          Hello: {{ user.username }}
+
+       </div>
+      </span>
+
+          {% if current_order_products != NONE %}
+           <span class=" ">
+
+            <a class="nav-link text-light mr-auto" href="{% url 'orders:ordersummary' %}"><img src="/static/orders/img/cart.png" width="35px" height="30px"  >{{item_count}}</a>
+
+          </span>
+          {% endif %}
+      </div>
+    </nav>
+
+
+
+
+        <div class="my-menu-flex-container">
+
+
+          {% if messages %}
+          {% for message in messages %}
+          <div class= "alert alert-info" role="alert" style="margin-top: 3%">
+                  {{ message }}
+          </div>
+          {% endfor %}
+          {% endif %}
+
+          <table  class="table-dark table-sm  table-responsive-sm text-center
+          table-bordered table-hover" style="width:100%; margin-top: 3%">
+            <thead class="thead-dark">
+
+
+              <tr class="bg-primary">
+                      <th colspan="5"><h1>JO PIZZA MENU</h1></th>
+              </tr>
+              <tr>
+
+                <th scope="col">Item</th>
+                <th scope="col">Size</th>
+                <th scope="col">Price</th>
+
+
+
+                {% if current_order_products %}
+                <th><a href="{% url 'orders:ordersummary' %}"
+                  class="btn btn-info">Go to Cart</a>
+
+                  {% if item_count %}
+
+                # Items in Cart: {{item_count}} </th>
+
+                {% endif %}
+
+                {% else %}
+                <th>No items in cart</th>
+                {%endif%}
+              </tr>
+            </thead>
+            <tbody>
+
+
+
+              {% for item in menu_item %}
+
+
+
+        <!-- <form class="" action="{% url 'orders:add_to_cart' item.id %}" method="post"> -->
+
+             {% csrf_token %}
+
+              {% ifchanged item.category %}
+
+
+              <tr class="table-info text-dark" id="{{item.category}}">
+
+                <th scope="row" colspan="5"  > <h2> {{ item.category }} </h2> </th>
+
+
+             </tr> {% endifchanged %}
+
+              <tr>
+
+                <td>{{item.name}}</td>
+                <td>{{item.sizes}}</td>
+                <td>{{item.price}}</td>
+
+
+
+              {% if item.category == "Pizza" and "Topping" in item.name %}
+
+
+              <td><a href="{% url 'orders:customize_order' item.name %}" class="btn btn-info">Customize</a></td>
+
+              {% elif item.category == "Subs" %}
+              <td><a href="{% url 'orders:customize_order' item.name %}" class="btn btn-info">Customize</a></td>
+            {% else %}
+              <form class="" action="{% url 'orders:add_to_cart' item.id %}" method="post">
+                      {% csrf_token %}
+
+              <td>
+                <label for="qauntity">Qauntity:</label>
+                <input name="quantity" id="quantity" type="number" value=1 min=1 max=30 >
+              <button type="submit" class="btn btn-warning">Add to Cart</button></td>
+                </form>
+              <!-- <td><a href="{% url 'orders:add_to_cart' item.id %}" class="btn btn-warning">Add to Cart</a></td> -->
+            {%endif%}
+              <!-- <td><input type="submit" value="Add to Cart" class="btn btn-warning"></td> -->
+
+               <!-- <td><button type="submit"><a href="{% url 'orders:add_to_cart' item.id %}" class="btn btn-warning">Add to Cart</a></button></td> -->
+
+
+              </tr>
+              {% endfor %}
+
+            </tbody>
+
+          </table>
+
+          <br>
+        </div>
+
+{% endblock %}

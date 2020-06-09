@@ -1,0 +1,94 @@
+{% extends 'orders/base.html' %}
+
+{% block body %}
+<div class="my-menu-flex-container">
+  <div class="" style="color: yellow; background: grey">
+
+
+    <h1> {{user}} Profile </h1>
+    <h5>Summary of all your Orders</h5>
+  </div>
+  <table class="table-dark table-sm table-responsive-sm table-hover table-bordered text-center p-3">
+    <tr class="text-center">
+      <th>Date Ordered</th>
+      <th>Items</th>
+      <th>Total</th>
+    </tr>
+    {% for order in my_orders %}
+    <tr>
+      <td>{{ order.date_ordered }}</td>
+
+      <td>
+        {% for item in order.ordered_items.all %}
+
+        {%if item.menu_item.category == "Pizza" and "Topping" in item.menu_item.name %}
+
+        {% if item.ptoppings != False %}
+
+        {{item.menu_item.sizes}}
+        {{ item.menu_item.name }}
+        Toppings: {{ item.ptoppings }} ;
+
+        {% endif %}
+
+        {% endif %}
+
+        {%if item.menu_item.category == "Pizza" and "Topping" not in item.menu_item.name %}
+
+        {{item.menu_item.sizes}}
+        {{ item.menu_item.name }} ;
+
+        {% endif %}
+
+        <!-- subs with no extras -->
+
+        {% if item.menu_item.category == "Subs" and item.num_extras == 0 %}
+
+        {{item.menu_item.sizes}}
+
+        {{ item.menu_item.name }}
+
+        {% endif %}
+
+        <!-- subs with extras -->
+
+        {% if item.num_extras > 0 %}
+
+        {{ item.menu_item.name }}
+        Extras: {{ item.extras }} ;
+
+        {% endif %}
+
+        {% if item.menu_item.category != "Pizza" and item.menu_item.category != "Subs" %}
+
+        {% if item.menu_item.sizes%}
+        {{item.menu_item.sizes}}
+        {% endif %}
+        {{ item.menu_item.name }} ;
+
+        {% endif %}
+
+        {% endfor %}
+
+      </td>
+      <td>$ Total Price: {{ order.get_cart_total }}</td>
+
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan=4> You have no orders.</td>
+    </tr>
+    {% endfor %}
+
+    <tr>
+      <td colspan=4>
+        <a href="{% url 'orders:index' %}" class="btn btn-warning pull-left">
+          {% if not order %}Return to Menu{% else %}Go to Menu {% endif %}
+        </a>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+{% endblock  %}

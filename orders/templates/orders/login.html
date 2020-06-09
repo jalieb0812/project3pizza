@@ -1,0 +1,69 @@
+{% extends "orders/base.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+
+{% block body %}
+
+
+
+<div class="container-login">
+
+
+  <div class="row justify-content-center ">
+
+
+    <div class="col mt-3 p-3" style="color:lightblue">
+
+      <div>
+
+        {% if message %}
+        <div>
+          <h3 style="color:lightblue"> {{ message }} </h3>
+        </div>
+        {% endif %}
+
+        <h1>Welcome to JO-PIZZA!</h1>
+        <h3> Login</h3>
+
+      </div>
+
+
+      <form class="form-conrtol" action="{% url 'orders:login' %}" method="post">
+        {% csrf_token %}
+
+        <!-- <div class="form-row">
+      <div class="form-col"  <div class="form-group">> -->
+
+        <div class="form-group">
+
+          <label for="username">Username</label>
+          <input class="form-control" id="username" placeholder="username" name="username" type="text" />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+
+          <input class="form-control" id="password" placeholder="password" name="password" type="password" />
+
+        </div>
+
+        <div class="row justify-content-center">
+
+          <input class="btn btn-primary mr-1" type="submit" value="Login">
+      </form>
+
+      <a href="{% url 'orders:register' %}" class="btn btn-info">Register</a>
+
+    </div>
+
+
+  </div>
+
+
+
+</div>
+
+{% endblock %}
