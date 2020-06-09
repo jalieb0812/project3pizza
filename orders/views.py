@@ -117,6 +117,8 @@ def customize_order(request, food, *args,**kwargs):
 
         extras = Extras.objects.all()
 
+        extra_cheese=Extras.objects.filter(name__icontains="cheese")
+
         menu_items = Menu_Item.objects.all()
 
         ordered_item = Menu_Item.objects.filter(name=food).first()
@@ -128,6 +130,7 @@ def customize_order(request, food, *args,**kwargs):
                 "menu_item": menu_items,
                 "toppings": toppings,
                 "extras": extras,
+                'extra_cheese': extra_cheese
 
             }
         return render(request, "orders/customize_order.html", context)
